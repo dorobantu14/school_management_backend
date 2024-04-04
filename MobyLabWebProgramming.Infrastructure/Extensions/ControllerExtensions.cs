@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Errors;
 using MobyLabWebProgramming.Core.Responses;
 

@@ -41,4 +41,12 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Repositories\Implementation\TeacherRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Services\Implementations\TeacherService" />
+  </ItemGroup>
+
 </Project>
