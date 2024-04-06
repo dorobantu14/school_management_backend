@@ -30,10 +30,5 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
             .HasPrincipalKey(c => c.Id)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
-        
-        // relatie many-to-many course-student
-        builder.HasMany(s => s.Courses)
-            .WithMany(c => c.Students)
-            .UsingEntity(j => j.ToTable("CourseStudent"));
     }
 }

@@ -2,14 +2,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Responses;
+using MobyLabWebProgramming.Infrastructure.Authorization;
 using MobyLabWebProgramming.Infrastructure.Extensions;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 
 namespace MobyLabWebProgramming.Backend.Controllers;
 
-public class ScheduleController : AuthorizationController
+[ApiController]
+[Route("api/[controller]/[action]")]
+public class ScheduleController : AuthorizedController
 {
-    readonly IScheduleService _scheduleService;
+    private readonly IScheduleService _scheduleService;
     public ScheduleController(IScheduleService scheduleService, IUserService userService) : base(userService)
     {
         _scheduleService = scheduleService;
@@ -25,21 +28,24 @@ public class ScheduleController : AuthorizationController
     [HttpPost]
     public async Task<ActionResult<RequestResponse>> Add([FromBody] ScheduleDTO schedule)
     {
-        return this.FromServiceResponse(await _scheduleService.AddSchedule(schedule));
+        var currentUser = await GetCurrentUser();
+        return this.FromServiceResponse(await _scheduleService.AddSchedule(schedule, currentUser.Result));
     }
     
     [Authorize]
     [HttpPut]
     public async Task<ActionResult<RequestResponse>> Update([FromBody] ScheduleUpdateDTO schedule)
     {
-        return this.FromServiceResponse(await _scheduleService.UpdateSchedule(schedule));
+        var currentUser = await GetCurrentUser();
+        return this.FromServiceResponse(await _scheduleService.UpdateSchedule(schedule, currentUser.Result));
     }
     
     [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<RequestResponse>> Delete([FromRoute] Guid id)
     {
-        return this.FromServiceResponse(await _scheduleService.DeleteSchedule(id));
+        var currentUser = await GetCurrentUser();
+        return this.FromServiceResponse(await _scheduleService.DeleteSchedule(id, currentUser.Result));
     }
     
     [Authorize]

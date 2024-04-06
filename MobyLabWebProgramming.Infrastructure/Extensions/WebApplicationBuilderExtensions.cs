@@ -10,9 +10,12 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MobyLabWebProgramming.Infrastructure.Converters;
+using MobyLabWebProgramming.Infrastructure.Data;
 using MobyLabWebProgramming.Infrastructure.Services.Implementations;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Workers;
@@ -179,6 +182,7 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<IClassroomService, ClassroomService>()
             .AddTransient<ICourseService, CourseService>()
             .AddTransient<IScheduleService, ScheduleService>();
+        builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         return builder;
     }

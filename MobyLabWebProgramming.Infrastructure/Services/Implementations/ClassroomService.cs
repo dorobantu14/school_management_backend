@@ -1,5 +1,7 @@
+using System.Net;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
+using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
@@ -25,8 +27,12 @@ public class ClassroomService : IClassroomService
         return classroom == null ? ServiceResponse<ClassroomDTO>.FromError(CommonErrors.ClassroomNotFound) : ServiceResponse<ClassroomDTO>.ForSuccess(classroom);
     }
 
-    public async Task<ServiceResponse> AddClassroom(ClassroomDTO classroom, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> AddClassroom(ClassroomDTO classroom, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden, "Only the admin can add a classroom!"));
+        }
         await _repository.AddAsync(new Classroom
         {
             Name = classroom.Name,
@@ -35,8 +41,12 @@ public class ClassroomService : IClassroomService
         return ServiceResponse.ForSuccess();
     }
 
-    public async Task<ServiceResponse> UpdateClassroom(ClassroomUpdateDTO classroom, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> UpdateClassroom(ClassroomUpdateDTO classroom, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden, "Only the admin can update a classroom!"));
+        }
         var existingClassroom = await _repository.GetAsync(new ClassroomUpdateSpec(classroom.Id), cancellationToken);
         
         if (existingClassroom == null)
@@ -45,15 +55,18 @@ public class ClassroomService : IClassroomService
         }
         
         existingClassroom.Name = classroom.Name ?? existingClassroom.Name;
-        existingClassroom.ScheduleId = classroom.ScheduleId ?? existingClassroom.ScheduleId;
         
         await _repository.UpdateAsync(existingClassroom, cancellationToken);
         
         return ServiceResponse.ForSuccess();
     }
 
-    public async Task<ServiceResponse> DeleteClassroom(Guid id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteClassroom(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden, "Only the admin can delete a classroom!"));
+        }
         await _repository.DeleteAsync<Classroom>(id, cancellationToken);
         
         return ServiceResponse.ForSuccess();

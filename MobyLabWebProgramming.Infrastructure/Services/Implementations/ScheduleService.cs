@@ -1,5 +1,7 @@
+using System.Net;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
+using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
@@ -30,6 +32,12 @@ public class ScheduleService : IScheduleService
     public async Task<ServiceResponse> AddSchedule(ScheduleDTO schedule, UserDTO? requestingUser = default,
         CancellationToken cancellationToken = default)
     {
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden,
+                "Only the admin can add a schedule!"));
+        }
+
         await _repository.AddAsync(new Schedule
         {
             StartHour = schedule.StartHour,
@@ -46,6 +54,12 @@ public class ScheduleService : IScheduleService
     public async Task<ServiceResponse> UpdateSchedule(ScheduleUpdateDTO schedule, UserDTO? requestingUser = default,
         CancellationToken cancellationToken = default)
     {
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden,
+                "Only the admin can update a schedule!"));
+        }
+        
         var existingSchedule = await _repository.GetAsync(new ScheduleUpdateSpec(schedule.Id), cancellationToken);
         
         if (existingSchedule == null)
@@ -67,6 +81,11 @@ public class ScheduleService : IScheduleService
 
     public async Task<ServiceResponse> DeleteSchedule(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden,
+                "Only the admin can delete a schedule!"));
+        }
         await _repository.DeleteAsync<Schedule>(id, cancellationToken);
         return ServiceResponse.ForSuccess();
     }

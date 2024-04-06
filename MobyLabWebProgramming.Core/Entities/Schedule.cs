@@ -10,4 +10,5 @@ public class Schedule : BaseEntity
     public Guid TeacherId { get; set; }
     public Classroom Classroom { get; set; } = default!;
     public Course Course { get; set; } = default!;
+    public Teacher Teacher { get; set; } = default!;
 }

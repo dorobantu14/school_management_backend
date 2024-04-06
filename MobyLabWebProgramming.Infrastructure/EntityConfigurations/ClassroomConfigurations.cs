@@ -16,9 +16,6 @@ public class ClassroomConfigurations : IEntityTypeConfiguration<Classroom>
             .HasMaxLength(255)
             .IsRequired();
 
-        builder.Property(c => c.ScheduleId)
-            .IsRequired();
-
         // relatie one-to-many
         builder.HasMany(c => c.Students)
             .WithOne(s => s.Classroom)

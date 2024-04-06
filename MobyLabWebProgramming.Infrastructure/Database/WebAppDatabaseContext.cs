@@ -1,5 +1,6 @@
 ﻿using Ardalis.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
+using MobyLabWebProgramming.Core.Entities;
 using SmartEnum.EFCore;
 
 namespace MobyLabWebProgramming.Infrastructure.Database;
@@ -28,4 +29,5 @@ public sealed class WebAppDatabaseContext : DbContext
                                                           // such that each entity that needs to be mapped to the database tables is configured accordingly.
         modelBuilder.ConfigureSmartEnum(); // Add support for smart enums.
     }
+    public DbSet<TeacherCourses> TeacherCourses { get; set; } = default!;
 }

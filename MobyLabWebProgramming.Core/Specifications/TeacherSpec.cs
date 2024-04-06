@@ -11,7 +11,6 @@ public sealed class TeacherSpec : BaseSpec<TeacherSpec, Teacher, TeacherDTO>
     {
         Name = e.Name,
         Email = e.Email,
-        CourseId = e.CourseId,
     };
     public TeacherSpec(Guid id)
     {

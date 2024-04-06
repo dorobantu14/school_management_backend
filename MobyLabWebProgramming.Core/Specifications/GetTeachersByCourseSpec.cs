@@ -12,9 +12,9 @@ public class GetTeachersByCourseSpec : BaseSpec<GetTeachersByCourseSpec, Teacher
         Name = e.Name,
         
     };
-    
+
     public GetTeachersByCourseSpec(Guid courseId)
     {
-        Query.Where(e => e.CourseId == courseId);
+        Query.Where(e => e.TeacherCourses.Any(tc => tc.CourseID == courseId));
     }
 }

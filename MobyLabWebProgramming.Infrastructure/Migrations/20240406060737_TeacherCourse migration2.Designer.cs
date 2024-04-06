@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MobyLabWebProgramming.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
     [DbContext(typeof(WebAppDatabaseContext))]
-    partial class WebAppDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240406060737_TeacherCourse migration2")]
+    partial class TeacherCoursemigration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,6 +150,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -169,28 +174,31 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("Teacher");
                 });
 
-            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.TeacherCourses", b =>
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.TeacherCourse", b =>
                 {
-                    b.Property<Guid>("TeacherID")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CourseID")
+                    b.Property<Guid>("CourseId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("TeacherId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("TeacherID", "CourseID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CourseID");
+                    b.HasIndex("CourseId");
 
-                    b.ToTable("TeacherCourses");
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("TeacherCourse");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.User", b =>
@@ -306,17 +314,17 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("Classroom");
                 });
 
-            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.TeacherCourses", b =>
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.TeacherCourse", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Course", "Course")
                         .WithMany("TeacherCourses")
-                        .HasForeignKey("CourseID")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Teacher", "Teacher")
                         .WithMany("TeacherCourses")
-                        .HasForeignKey("TeacherID")
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

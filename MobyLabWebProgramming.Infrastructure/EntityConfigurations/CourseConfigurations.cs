@@ -16,16 +16,10 @@ public class CourseConfigurations : IEntityTypeConfiguration<Course>
             .HasMaxLength(255)
             .IsRequired();
 
-        // relatie many-to-many course-teacher
-        builder.HasMany(c => c.Teachers)
-            .WithMany(t => t.Courses)
-            .UsingEntity(j => j.ToTable("CourseTeacher"));
-        
-        // relatie many-to-many course-student
-        builder.HasMany(c => c.Students)
-            .WithMany(s => s.Courses)
-            .UsingEntity(j => j.ToTable("CourseStudent"));
-        
+        // // relatie many-to-many course-teacher
+        // builder.HasMany(c => c.Teachers)
+        //     .WithMany(t => t.Courses)
+        //     .UsingEntity(j => j.ToTable("CourseTeacher"));
 
         builder.Property(c => c.CreatedAt)
             .IsRequired();
