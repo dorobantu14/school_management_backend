@@ -73,9 +73,9 @@ public class TeacherService : ITeacherService
     public async Task<ServiceResponse> UpdateTeacher(TeacherUpdateDTO teacher, UserDTO? requestingUser = default,
         CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != teacher.Id)
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
         {
-            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden, "Only the admin or the teacher can update a teacher!"));
+            return ServiceResponse.FromError(new ErrorMessage(HttpStatusCode.Forbidden, "Only the admin can update a teacher!"));
         }
         
         var existingTeacher = await _repository.GetAsync(new TeacherUpdateSpec(teacher.Id), cancellationToken);

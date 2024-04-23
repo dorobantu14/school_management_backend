@@ -55,4 +55,12 @@ public class StudentController : AuthorizedController
     {
         return this.FromServiceResponse(await _studentService.GetStudentByClassroomId(classroomId));
     }
+    
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<List<GetStudentScheduleDTO>>>> GetSchedule()
+    {
+        var currentUser = await GetCurrentUser();
+        return this.FromServiceResponse(await _studentService.GetStudentSchedule(currentUser.Result));
+    }
 }

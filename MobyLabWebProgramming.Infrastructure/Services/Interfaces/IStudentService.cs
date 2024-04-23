@@ -11,5 +11,6 @@ public interface IStudentService
     public Task<ServiceResponse> AddStudent(StudentDTO student, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse> UpdateStudent(StudentUpdateDTO student, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse> DeleteStudent(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
-    
+    public Task<ServiceResponse<List<GetStudentScheduleDTO>>> GetStudentSchedule(
+        UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
 }
